@@ -14,9 +14,10 @@ class BoardsController < ApplicationController
 
     @the_board = matching_boards.at(0)
 
-    matching_posts = Post.all
+    matching_posts = @the_board.posts
 
-    @list_of_posts = matching_posts.order({ :created_at => :desc })
+    @list_of_active_posts = matching_posts.where( "expires_on > ?", Date.today).order({ :created_at => :desc })
+    @list_of_expired_posts = matching_posts.where( "expires_on < ?", Date.today).order({ :created_at => :desc })
 
     render({ :template => "boards/show" })
   end
